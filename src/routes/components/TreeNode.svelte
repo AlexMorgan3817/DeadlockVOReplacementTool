@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TreeNode from './TreeNode.svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import type { DirectoryNode, AudioFile, ReplLink } from "../ts/types";
 	let {
 		node,
@@ -16,8 +17,8 @@
 		node: DirectoryNode|null;
 		Id?:string;
 		path?:string;
-		Links?:Map<string, string>;
-		SelectReaction?:Function,
+		Links?:SvelteMap<string, string>;
+		SelectReaction?: (path: string, event:MouseEvent) => void;
 		SelectedOriginals?:string[],
 		LinksValuesForRepl?:string[];
 		PlayReaction?: (path: string, event:MouseEvent) => void;
@@ -57,13 +58,15 @@
 					SelectReaction={SelectReaction}
 					PlayReaction={PlayReaction}
 					PlayReactionRepl={PlayReactionRepl}
+					DelReplReaction={DelReplReaction}
 					/>
 			{/each}
 			</div>
 			<div class="content">
 			{#each node.files as file}
-				{@const  p = (path ? path : node.name) + "/" + file.name}
-				<div class ='row'>
+				{@const p = (path ? path : node.name) + "/" + file.name}
+				{@const repl_key = Links && Links.has(p) ? Links.get(p) : null}
+				<div class = {'row' + (repl_key ? " haveLink" : "")}>
 					{#if PlayReaction}
 						<button type="button" class="playbutton"
 							onclick={(event)=>PlayReaction?.(p, event)}
@@ -72,28 +75,25 @@
 					<button type="button"
 						class="file original"
 						class:selected={SelectedOriginals?.includes(p) || LinksValuesForRepl?.includes(p)}
-						path={p}
 						onmousedown={(event) => {
 							console.log(SelectReaction);
 							if(SelectReaction)
-								return SelectReaction(event);
+								return SelectReaction(p, event);
 						}}
 					>
 						{file.name}
 					</button>
-					{#if Links}
-						{#if Links.has(p)}
-							{@const repl_key = Links.get(p)}
-							<div class='replacement'>
-								<button type="button" class="playbutton"
-									onclick={(event)=>PlayReactionRepl?.(repl_key, event)}
-								>▶</button>
-								{ repl_key.split("/").at(-1) }
-								<button type="button" class="removeLinkButton"
-									onclick={(event)=>{DelReplReaction(p)}}
-								>X</button>
-							</div>
-						{/if}
+					<span class="file_size">{Math.ceil(file.size / 1024)}kb</span>
+					{#if repl_key}
+						<div class='replacement'>
+							<button type="button" class="removeLinkButton"
+								onclick={(event)=>{DelReplReaction?.(p)}}
+							>X</button>
+							<button type="button" class="playbutton"
+								onclick={(event)=>PlayReactionRepl?.(repl_key, event)}
+							>▶</button>
+							{ repl_key.split("/").at(-1) }
+						</div>
 					{/if}
 				</div>
 			{/each}

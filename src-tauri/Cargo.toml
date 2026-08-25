@@ -25,3 +25,4 @@ serde_json = { version = "1", features = ["preserve_order"] }
 walkdir = "2.5.0"
 tauri-plugin-dialog = "2.7.2"
 rodio = "0.22.2"
+symphonia = { version = "0.6.1", features = ["opt-simd", "mp3", "wav", "flac", "vorbis"] }

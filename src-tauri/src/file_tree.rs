@@ -1,60 +1,67 @@
 use serde::{Serialize};
+use std::os::windows::fs::MetadataExt;
 use std::{fs, path::Path};
+use symphonia::core::{formats::FormatOptions, meta::MetadataOptions};
+use symphonia::default::get_probe;
+use symphonia::core::formats::probe::Hint;
+use symphonia::core::io::MediaSourceStream;
 
-#[derive(Default)]
-#[derive(Serialize)]
+#[derive(Default, Serialize)]
 pub struct AudioFile{
 	name: String,
 	duration: f32,
 	size: u64,
 	relative_path:String
 }
-#[derive(Default)]
-#[derive(Serialize)]
+#[derive(Default, Serialize)]
 pub struct DirectoryNode {
-    name: String,
-    children: Vec<DirectoryNode>,
-    files: Vec<AudioFile>,
+	name: String,
+	children: Vec<DirectoryNode>,
+	files: Vec<AudioFile>,
 }
 
 pub fn build_tree(path: &Path) -> std::io::Result<DirectoryNode> {
-    let mut children = Vec::new();
-    let mut files = Vec::new();
+	let mut children = Vec::new();
+	let mut files = Vec::new();
 
-    for entry in fs::read_dir(path)? {
-        let entry = entry?;
-        let path = entry.path();
-        let metadata = entry.metadata()?;
+	for entry in fs::read_dir(path)? {
+		let entry = entry?;
+		let path = entry.path();
+		let metadata = entry.metadata()?;
 
-        if metadata.is_dir() {
-            children.push(build_tree(&path)?);
-        } else if metadata.is_file() {
-        	let ext = path.extension().and_then(|e| e.to_str());
-            if ext == Some("opus")
-            || ext == Some("ogg")
-            || ext == Some("mp3")
-            || ext == Some("wav")
-            || ext == Some("flac") {
-                files.push(AudioFile {
-                    name: entry.file_name().to_string_lossy().into(),
-                    duration: 0.0,
-                    size: metadata.len(),
-                    relative_path: path.to_string_lossy().into()
-                });
-            }
-        }
-    }
+		if metadata.is_dir() {
+			children.push(build_tree(&path)?);
+		} else if metadata.is_file() {
+			// let file = entry.path();
+			let ext = path.extension().and_then(|e| e.to_str());
+			if ext == Some("opus")
+			|| ext == Some("ogg")
+			|| ext == Some("mp3")
+			|| ext == Some("wav")
+			|| ext == Some("flac") {
+				// let probe = get_probe();
+				// let mss = MediaSourceStream::from(file);
 
-    children.sort_by(|a, b| a.name.cmp(&b.name));
-    files.sort_by(|a, b| a.name.cmp(&b.name));
+				files.push(AudioFile {
+					name: entry.file_name().to_string_lossy().into(),
+					duration: 0.0,
+					size: metadata.file_size(),
+					relative_path: path.to_string_lossy().into()
+				});
+			}
+		}
+	}
 
-    Ok(DirectoryNode {
-        name: path
-            .file_name()
-            .unwrap_or(path.as_os_str())
-            .to_string_lossy()
-            .into_owned(),
-        children,
-        files,
-    })
+	children.sort_by(|a, b| a.name.cmp(&b.name));
+	files.sort_by(|a, b| a.name.cmp(&b.name));
+
+	Ok(DirectoryNode {
+		name: path
+			.file_name()
+			.unwrap_or(path.as_os_str())
+			.to_string_lossy()
+			.into_owned(),
+		children,
+		files,
+	})
 }

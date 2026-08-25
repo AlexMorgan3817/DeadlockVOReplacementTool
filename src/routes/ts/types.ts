@@ -1,3 +1,8 @@
+export interface Serializable{
+	serialize(): Object;
+	deserialize(o:Object): void;
+}
+
 export interface DirectoryNode {
     name: string;
     children: DirectoryNode[];

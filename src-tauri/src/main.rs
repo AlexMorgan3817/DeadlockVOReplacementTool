@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    deadlocksfx_replacement_lib::run()
+	deadlocksfx_replacement_lib::run()
 }

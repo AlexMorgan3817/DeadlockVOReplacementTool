@@ -1,0 +1,11 @@
+[*.rs]
+indent_style = tab
+
+[*.sass, *.scss]
+indent_style = tab
+
+[*.svelte, *.ts]
+indent_style = tab
+
+[*.html]
+indent_style = tab

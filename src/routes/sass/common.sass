@@ -46,8 +46,13 @@ button
 		left: 0
 		*
 			float: inline-start
-
-	.buttons
+	.right
+		position: absolute
+		vertical-align: middle
+		right: 0
+		*
+			float: inline-start
+	.folder_selectors
 		align-items: center
 		min-width: 0
 
@@ -94,9 +99,10 @@ button
 
 	.row
 		display: grid
-		grid-template-columns: 0.1fr 1fr 1fr
+		grid-template-columns: 0fr 1fr 0fr 1fr
 		padding-left: 5px
-
+		&.haveLink
+			background-color: #062a
 		.original
 			text-align: left
 			min-width: 0
@@ -108,10 +114,11 @@ button
 				background-color: #621a
 			&.selected
 				background-color: #884a
+		// .file_size
+
 		.replacement
-			text-align: left
 			margin-left: 12px
 			&:before
 				content: ": "
 #repl .row
-	grid-template-columns: 0.1fr 1fr
+	grid-template-columns: 0fr 1fr 0.1fr
