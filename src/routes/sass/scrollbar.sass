@@ -1,0 +1,58 @@
+:root
+	-ms-interpolation-mode: nearest-neighbor
+	image-rendering: crisp-edges
+	image-rendering: pixelated
+
+::-webkit-scrollbar
+	width: 16px
+	height: 16px
+	background: #101020
+
+::-webkit-scrollbar-thumb
+	background: #101020
+	background-size: contain, contain, contain
+	box-shadow: 0 0 2px 2px #000
+	transition: box-shadow 1s linear
+	&:horizontal
+		// background: url('sb_top.png') left no-repeat, url('sb_bot.png') right no-repeat, url('sb_mh.png') center repeat-x
+		background-size: contain, contain, contain
+	&:hover
+		box-shadow: 0 0 12px 2px #000
+
+::-webkit-scrollbar-button
+	width: 16px
+	height: 16px
+	background: #131918
+	background-repeat: no-repeat
+	background-size: contain
+	// background-image: url('sb_up.png')
+	box-shadow: 0 6px 6px 0 #000
+	&:active
+		// background-image: url('sb_up_pressed.png')
+	&:increment
+		// background-image: url('sb_down.png')
+		box-shadow: 0 -6px 6px 0 #000
+		&:active
+			// background-image: url('sb_down_pressed.png')
+	&:horizontal
+		// background-image: url('sb_uph.png')
+		box-shadow: 6px 0 6px 0 #000
+		&:active
+			// background-image: url('sb_uph_pressed.png')
+		&:increment
+			// background-image: url('sb_downh.png')
+			box-shadow: -6px 0 6px 0 #000
+			&:active
+				// background-image: url('sb_downh_pressed.png')
+
+::-webkit-scrollbar-track
+	border-left : 2px solid #0f201a
+	border-right: 2px solid #0f201a
+	&:horizontal
+		border: none
+		border-top : 2px solid #0f201a
+		border-bottom: 2px solid #0f201a
+	// border: 1px solid #0f0
+
+::-webkit-scrollbar-corner
+	background: #021

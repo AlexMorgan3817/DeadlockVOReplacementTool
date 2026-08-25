@@ -1,0 +1,117 @@
+$bg1:                 #223 !default
+$bg2:                 #112 !default
+$bg_panes:            #334 !default
+$bg_panes_unexpanded: #2a2a44 !default
+
+$color_generic:       #acc !default
+$color_accent:        #8cc !default
+$edges_col:           #16161B !default
+
+@use 'scrollbar.sass'
+
+body, html
+	height: 100%
+	background-color: $bg1
+	padding: 0
+	margin: 0
+	color: $color_generic
+
+body
+	display: flex
+	flex-direction: column
+
+button
+	&[type=button]
+		// background-color: #113
+		color: $color_accent
+		padding-left: 4px
+		border: none
+		background-color: transparent
+		transition: background-color 0.3s
+		&:hover
+			background-color: #445
+
+.toolbar
+	padding: 4px
+	margin: 0
+	background-color: $bg2
+	border-bottom: $color_accent
+	align-items: center
+	text-align: center
+	flex: 0 0 auto
+	.left
+		// float: left
+		position: absolute
+		vertical-align: middle
+		left: 0
+		*
+			float: inline-start
+
+	.buttons
+		align-items: center
+		min-width: 0
+
+.container
+	padding: 0
+	margin: 4px
+	display: grid
+	grid-template-columns: 3fr 2fr
+	flex: 1 1 auto
+	min-height: 0
+	>*
+		grid-column-start: 1 1
+
+	>.directory
+		box-shadow: -4px 0px 2px 0px #445
+		border-left: 2px solid #668
+		background-color: $bg_panes !important
+
+.directory
+	border-left: 1px solid #44a
+	margin-bottom: 4px
+	background-color: $bg_panes_unexpanded
+	overflow-y: auto
+	&.expanded
+		border-left: 1px solid #444
+		background-color: transparent
+		border-bottom: 2px solid #222
+		box-shadow: -2px 2px 4px 0 #222
+		margin-bottom: 12px
+
+	.children
+		margin-top: 4px
+		padding-left: 10px
+		.dir_title_button
+			width: 100%
+			text-align: left
+			&::before
+				content: ""
+			&.expanded::before
+				content: ""
+			&.empty::before
+				content: "• "
+
+
+	.row
+		display: grid
+		grid-template-columns: 0.1fr 1fr 1fr
+		padding-left: 5px
+
+		.original
+			text-align: left
+			min-width: 0
+			border-bottom: 1px solid #445
+			transition: background-color 0.3s
+			&:hover
+				background-color: #111a
+			&:active
+				background-color: #621a
+			&.selected
+				background-color: #884a
+		.replacement
+			text-align: left
+			margin-left: 12px
+			&:before
+				content: ": "
+#repl .row
+	grid-template-columns: 0.1fr 1fr
