@@ -13,9 +13,9 @@
 		PlayReaction,
 		PlayReactionRepl,
 		DelReplReaction,
-		path = null,
+		path,
 		root = true
-	} = $props<{
+	}:{
 		node: DirectoryNode|null;
 		Id?:string;
 		Links?:SvelteMap<string, string>;
@@ -28,7 +28,7 @@
 		DelReplReaction?: (path: string) => void;
 		path?:string;
 		root?:boolean;
-	}>();
+	} = $props();
 
 	let expanded = $state(true);
 </script>
