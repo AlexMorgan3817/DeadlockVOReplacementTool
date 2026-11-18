@@ -2,13 +2,13 @@
 	import TreeNode from './TreeNode.svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { DirectoryNode, AudioFile, ReplLink } from "../ts/types";
+	import type { MouseButtonBehaviour } from "../ts/mouse_button_behaviour"
+    import { event } from '@tauri-apps/api';
 	let {
 		node,
 		Id,
 		Links,
-		MouseDownReaction,
-		MouseUpReaction,
-		MouseMoveReaction,
+		NameClickBehaviour,
 		SelectedCheck,
 		PlayReaction,
 		PlayReactionRepl,
@@ -19,9 +19,7 @@
 		node: DirectoryNode|null;
 		Id?:string;
 		Links?:SvelteMap<string, string>;
-		MouseDownReaction?: (path: string, event:MouseEvent) => void;
-		MouseUpReaction?: (path: string, event:MouseEvent) => void;
-		MouseMoveReaction?: (path: string, event:MouseEvent) => void;
+		NameClickBehaviour?: MouseButtonBehaviour<[string, MouseEvent, DirectoryNode], void>;
 		SelectedCheck?: (path:string) => boolean;
 		PlayReaction?: (path: string, event:MouseEvent) => void;
 		PlayReactionRepl?: (path: string, event:MouseEvent) => void;
@@ -60,9 +58,7 @@
 					path={abs_path + child.name}
 					Links={Links}
 					SelectedCheck={SelectedCheck}
-					MouseDownReaction={MouseDownReaction}
-					MouseUpReaction = {MouseUpReaction}
-					MouseMoveReaction = {MouseMoveReaction}
+					NameClickBehaviour={NameClickBehaviour}
 					PlayReaction={PlayReaction}
 					PlayReactionRepl={PlayReactionRepl}
 					DelReplReaction={DelReplReaction}
@@ -83,9 +79,10 @@
 					<button type="button"
 						class="file original"
 						class:selected={SelectedCheck?.(p)}
-						onmousedown={(event) => MouseDownReaction?.(p, event)}
-						onmouseup={(event) => MouseUpReaction?.(p, event)}
-						onmousemove={(event) => MouseMoveReaction?.(p, event)}
+						onmousedown={(event) => NameClickBehaviour?.down?.(p, event, node)}
+						onmouseup={(event) => NameClickBehaviour?.up?.(p, event, node)}
+						onmousemove={(event) => NameClickBehaviour?.move?.(p, event, node)}
+						oncontextmenu={(event) => NameClickBehaviour?.contextmenu?.(p,event, node)}
 					>
 						{file.name}
 					</button>

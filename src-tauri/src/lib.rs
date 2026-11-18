@@ -6,6 +6,7 @@ use persistency::{save_as, load};
 
 mod player;
 use player::{AudioState, play_audio, set_volume, stop_sounds};
+use rodio::Player;
 
 mod build;
 use build::build;
@@ -25,11 +26,11 @@ fn read_file_tree(path: String) -> Result<DirectoryNode, String> {
 pub fn run() {
 	let stream = DeviceSinkBuilder::open_default_sink()
 		.expect("Failed to open audio device");
-
+	let p = Player::connect_new(&stream.mixer());
+	p.set_volume(0.5);
 	let audio_state = AudioState {
 		stream,
-		players: Mutex::new(Vec::new()),
-		volume: Mutex::new(0.5)
+		player: Mutex::new(p),
 	};
 	tauri::Builder::default()
 		.manage(audio_state)
