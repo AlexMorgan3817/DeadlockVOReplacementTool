@@ -144,6 +144,15 @@
 			last_selected = target_path;
 		}
 	}
+	let container: HTMLElement;
+	let ratio = 0.6;
+	let dragging = $state(false);
+	let raf = 0;
+	function apply() {
+		raf = 0;
+		// container.style.setProperty("--ratio", String(ratio));
+		container.style.setProperty("grid-template-columns", `minmax(0, ${ratio}fr) 6px minmax(0, ${1 - ratio}fr)`)
+	}
 </script>
 <svelte:window onkeydown={handleKeydown} />
 
@@ -178,7 +187,7 @@
 		<button type='button' onclick={load_project}>Load</button>
 	</span>
 </div>
-<main class="container">
+<main class="container" bind:this = {container}>
 	<TreeNode node={sources.node} Id="originals"
 		Links={Links}
 
@@ -239,6 +248,22 @@
 			Links.delete(path);
 		}}
 	/>
+	<div class="splitter" role="separator" aria-orientation="vertical"
+			onpointerdown={(e: PointerEvent) =>{
+				e.preventDefault();
+				(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+				dragging = true;
+			}}
+			onpointermove={(e: PointerEvent) => {
+				if (!dragging)
+					return;
+				const r = container.getBoundingClientRect();
+				ratio = Math.min(0.85, Math.max(0.15, (e.clientX - r.left) / r.width));
+				raf = requestAnimationFrame(apply);
+			}}
+			onpointerup={() => dragging = false}
+			onpointercancel={() => dragging = false}
+			ondblclick={() => ratio = 0.6}></div>
 	<TreeNode node={replacements.node} Id="repl"
 		SelectedCheck={(path:string)=>link_values?.includes(path)}
 		NameClickBehaviour = {{

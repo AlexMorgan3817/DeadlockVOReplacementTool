@@ -59,19 +59,38 @@ button
 .container
 	padding: 0
 	margin: 4px
+	margin-bottom: 0
 	display: grid
-	grid-template-columns: 3fr 2fr
 	flex: 1 1 auto
 	min-height: 0
-	>*
-		grid-column-start: 1 1
+	grid-template-columns: .6fr 6px .4fr
+	&.dragging
+		user-select: none
+		cursor: col-resize
 
 	>.directory
-		box-shadow: -4px 0px 2px 0px #445
-		border-left: 2px solid #668
+		min-width: 0
+		overflow: auto
 		background-color: $bg_panes !important
+		margin-left: 4px
+		margin-right: 4px
+		margin-bottom: 0
+		&.expanded
+			margin-bottom: 0
+
+	.splitter
+		padding-left:12px
+		padding-right:12px
+		cursor: col-resize
+		background: #66a
+		transition: background 0.1s
+		&:hover, .dragging &
+			background: #99b
 
 .directory
+	contain: layout paint style
+	white-space: nowrap
+	overflow: auto
 	border-left: 1px solid #44a
 	margin-bottom: 4px
 	background-color: $bg_panes_unexpanded
@@ -98,6 +117,7 @@ button
 
 
 	.row
+		content-visibility: auto
 		display: grid
 		grid-template-columns: 0fr 1fr 0fr 1fr
 		padding-left: 5px
