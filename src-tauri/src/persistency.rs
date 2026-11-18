@@ -15,7 +15,8 @@ pub struct Project{
 	links:HashMap<String, String>,
 	sources:SerializedDirKeeper,
 	replacements:SerializedDirKeeper,
-	save_path:Option<String>
+	save_path:Option<String>,
+	build_path:Option<String>
 }
 
 #[tauri::command]

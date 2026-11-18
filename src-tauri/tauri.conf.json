@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "deadlocksfx_replacement",
+  "productName": "sfx replacement tool",
   "version": "0.1.0",
-  "identifier": "com.elarium.DeadlockSFX_replacement",
+  "identifier": "com.elarium.SFX-replacement-tool",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",

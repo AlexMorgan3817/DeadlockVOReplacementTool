@@ -40,8 +40,6 @@ export class DirKeeper implements Serializable{
 	async load(path: string): Promise<boolean> {
 		let p = path.replaceAll("\\", "/");
 		this.absolute_dir = p.split("/").slice(0, -1).join("/");
-		console.log(this.absolute_dir);
-		console.log(path);
 		let node = await get_dir(p);
 		if (node) {
 			this.node = node;
@@ -49,20 +47,27 @@ export class DirKeeper implements Serializable{
 		}
 		return false;
 	}
+
+
+	public folder_path(): string{
+		return this.absolute_dir + "/" + this.node?.name;
+	}
+
 	async playAudio(path: string) {
 		console.log(this.absolute_dir);
 		console.log(path);
+		let rp = this.folder_path() + "/" + path;
 	    try {
-	        await invoke("play_audio", {path: this.absolute_dir + "/" + path });
+	        await invoke("play_audio", {path: rp});
 	    } catch (error) {
-	        console.error(error, path);
+	        console.error(error, rp);
 	    }
 	}
 
 	public serialize(): Object {
 		return {
 			"last_dir_loc": this.last_dir_loc,
-			"folder_path": this.absolute_dir + "/" + this.node?.name
+			"folder_path": this.folder_path()
 		}
 	}
 	public async deserialize(o: Object): Promise<void> {

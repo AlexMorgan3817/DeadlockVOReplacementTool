@@ -7,6 +7,9 @@ use persistency::{save_as, load};
 mod player;
 use player::{AudioState, play_audio, set_volume, stop_sounds};
 
+mod build;
+use build::build;
+
 use std::{path::Path};
 use std::sync::Mutex;
 use rodio::{DeviceSinkBuilder};
@@ -38,7 +41,8 @@ pub fn run() {
 			set_volume,
 			stop_sounds,
 			save_as,
-			load
+			load,
+			build
 		])
 		.run(tauri::generate_context!())
 		.expect("error while running tauri application");

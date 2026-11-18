@@ -1,10 +1,10 @@
 use serde::{Serialize};
 use std::os::windows::fs::MetadataExt;
 use std::{fs, path::Path};
-use symphonia::core::{formats::FormatOptions, meta::MetadataOptions};
-use symphonia::default::get_probe;
-use symphonia::core::formats::probe::Hint;
-use symphonia::core::io::MediaSourceStream;
+// use symphonia::core::{formats::FormatOptions, meta::MetadataOptions};
+// use symphonia::default::get_probe;
+// use symphonia::core::formats::probe::Hint;
+// use symphonia::core::io::MediaSourceStream;
 
 #[derive(Default, Serialize)]
 pub struct AudioFile{
@@ -34,11 +34,13 @@ pub fn build_tree(path: &Path) -> std::io::Result<DirectoryNode> {
 		} else if metadata.is_file() {
 			// let file = entry.path();
 			let ext = path.extension().and_then(|e| e.to_str());
-			if ext == Some("opus")
-			|| ext == Some("ogg")
-			|| ext == Some("mp3")
-			|| ext == Some("wav")
-			|| ext == Some("flac") {
+			if ext == Some("mp3")
+			// TODO: FFMPEG IMPLEMENTATION
+			// || ext == Some("ogg")
+			// || ext == Some("opus")
+			// || ext == Some("wav")
+			// || ext == Some("flac")
+			{
 				// let probe = get_probe();
 				// let mss = MediaSourceStream::from(file);
 

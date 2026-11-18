@@ -5,25 +5,29 @@
 	let {
 		node,
 		Id,
-		path,
 		Links,
-		SelectReaction,
-		SelectedOriginals,
-		LinksValuesForRepl,
+		MouseDownReaction,
+		MouseUpReaction,
+		MouseMoveReaction,
+		SelectedCheck,
 		PlayReaction,
 		PlayReactionRepl,
-		DelReplReaction
+		DelReplReaction,
+		path = null,
+		root = true
 	} = $props<{
 		node: DirectoryNode|null;
 		Id?:string;
-		path?:string;
 		Links?:SvelteMap<string, string>;
-		SelectReaction?: (path: string, event:MouseEvent) => void;
-		SelectedOriginals?:string[],
-		LinksValuesForRepl?:string[];
+		MouseDownReaction?: (path: string, event:MouseEvent) => void;
+		MouseUpReaction?: (path: string, event:MouseEvent) => void;
+		MouseMoveReaction?: (path: string, event:MouseEvent) => void;
+		SelectedCheck?: (path:string) => boolean;
 		PlayReaction?: (path: string, event:MouseEvent) => void;
 		PlayReactionRepl?: (path: string, event:MouseEvent) => void;
 		DelReplReaction?: (path: string) => void;
+		path?:string;
+		root?:boolean;
 	}>();
 
 	let expanded = $state(true);
@@ -47,24 +51,28 @@
 			{node.name}
 		</button>
 		{#if expanded}
+			{@const abs_path = (root ? "" : ((path ? path : node.name) + "/"))}
 			<div class="children">
 			{#each node.children as child}
 				<!-- rootNode={rootNode ? rootNode : node} -->
 				<TreeNode
 					node={child}
-					path={(path ? path : node.name) + "/" + child.name}
+					path={abs_path + child.name}
 					Links={Links}
-					SelectedOriginals={SelectedOriginals}
-					SelectReaction={SelectReaction}
+					SelectedCheck={SelectedCheck}
+					MouseDownReaction={MouseDownReaction}
+					MouseUpReaction = {MouseUpReaction}
+					MouseMoveReaction = {MouseMoveReaction}
 					PlayReaction={PlayReaction}
 					PlayReactionRepl={PlayReactionRepl}
 					DelReplReaction={DelReplReaction}
+					root = {false}
 					/>
 			{/each}
 			</div>
 			<div class="content">
 			{#each node.files as file}
-				{@const p = (path ? path : node.name) + "/" + file.name}
+				{@const p = abs_path + file.name}
 				{@const repl_key = Links && Links.has(p) ? Links.get(p) : null}
 				<div class = {'row' + (repl_key ? " haveLink" : "")}>
 					{#if PlayReaction}
@@ -74,12 +82,10 @@
 					{/if}
 					<button type="button"
 						class="file original"
-						class:selected={SelectedOriginals?.includes(p) || LinksValuesForRepl?.includes(p)}
-						onmousedown={(event) => {
-							console.log(SelectReaction);
-							if(SelectReaction)
-								return SelectReaction(p, event);
-						}}
+						class:selected={SelectedCheck?.(p)}
+						onmousedown={(event) => MouseDownReaction?.(p, event)}
+						onmouseup={(event) => MouseUpReaction?.(p, event)}
+						onmousemove={(event) => MouseMoveReaction?.(p, event)}
 					>
 						{file.name}
 					</button>

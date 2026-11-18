@@ -1,6 +1,6 @@
 {
-  "name": "deadlocksfx_replacement",
-  "version": "0.1.0",
+  "name": "sfx_replacement_tool",
+  "version": "0.5.0",
   "description": "",
   "type": "module",
   "scripts": {
